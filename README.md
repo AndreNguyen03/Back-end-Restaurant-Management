@@ -8,10 +8,10 @@
 ## Cài đặt
 1. Clone dự án:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/AndreNguyen03/Back-end-Restaurant-Management.git
 2. Di chuyển vào thư mục dự án:
    ```bash
-   cd <tên-thư-mục-dự-án>
+   cd Back-end-Restaurant-Management
 3. Cài đặt các package:
    ```bash
    npm install
