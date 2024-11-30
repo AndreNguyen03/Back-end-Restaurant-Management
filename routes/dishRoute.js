@@ -1,5 +1,5 @@
 import express from 'express'
-import {addDish, deleteDish, listDish} from '../controllers/dishController.js'
+import {addDish, deleteDish, listDish, editDish, listSpecificDish} from '../controllers/dishController.js'
 
 import multer from 'multer'
 
@@ -20,7 +20,8 @@ const upload = multer({storage: storage});
 dishRouter.post('/add', upload.single('image'), addDish);
 dishRouter.get('/list', listDish);
 dishRouter.post('/delete', deleteDish);
-
+dishRouter.post('/edit', upload.single('image'), editDish);
+dishRouter.post('/specificDish', listSpecificDish);
 
 
 
