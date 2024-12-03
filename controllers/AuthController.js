@@ -53,7 +53,7 @@ const Login = async (req, res) => {
         }
 
         let options = {
-            maxAge: 20 * 60 * 1000, // would expire in 20 minutes
+            maxAge: 24 * 60 * 60 * 1000, // would expire in 20 minutes
             httpOnly: true, // The cookie is only accessible by the web server
             sameSite: "Lax", // Change SameSite attribute to Lax
         };
