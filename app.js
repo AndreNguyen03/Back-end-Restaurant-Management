@@ -5,6 +5,7 @@ import dishRouter from './routes/dishRoute.js';
 import customerAuthRouter from './routes/customerAuthRoute.js';
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/authRoute.js';
+import employeeRouter from './routes/employeeRoute.js';
 
 // app config
 const app = express()
@@ -28,6 +29,7 @@ app.use('/api/dish', dishRouter);
 app.use('/images',express.static('uploads'));
 app.use('/api/cAuth', customerAuthRouter); // customer auth
 app.use('/api/eAuth', authRouter) // employee auth
+app.use('/api/employee', employeeRouter) // employee
 app.get('/', (req,res) => {
     res.send('API working')
 })

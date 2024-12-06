@@ -5,38 +5,43 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 const Register = async (req, res) => {
-    const { fullName, phoneNumber, address, employeeRole, socialId, username, password } = req.body;
-    try {
+  const { fullName, phoneNumber, address, employeeRole, socialId, username, password } = req.body;
+  try {
+      // Check if socialId already exists
+      const existingSocialId = await employeeModel.findOne({ socialId });
+      if (existingSocialId) return res.status(400).json({ message: "CCCD Đã tồn tại" });
 
-        const existingSocialId = await employeeModel.findOne({ socialId });
-        if (existingSocialId) return res.status(400).json({ message: "CCCD Đã tồn tại" });
+      // Check if username already exists
+      if (username && password) {
+          const existingAccount = await accountModel.findOne({ username });
+          if (existingAccount) return res.status(400).json({ success: false, message: "Username already in use" });
+      }
 
-        const existingAccount = await accountModel.findOne({ username });
-        if (existingAccount) return res.status(400).json({ message: "Username already in use" });
+      // Create new employee
+      const newEmployee = new employeeModel({ full_name: fullName, phone_number: phoneNumber, address, employee_role: employeeRole, socialId });
+      await newEmployee.save();
 
-        const newEmployee = new employeeModel({ full_name: fullName, phone_number: phoneNumber, address, employee_role: employeeRole, socialId });
+      // If username and password are provided, create new account
+      if (username && password) {
+          const hashedPassword = await bcrypt.hash(password, 10);
+          const newAccount = new accountModel({ username, password: hashedPassword, role: "employee", userId: newEmployee._id });
+          await newAccount.save();
+          return res.status(201).json({ success: true, message: "Employee and account registered successfully" });
+      }
 
-        await newEmployee.save();
+      // If no username and password, only employee is registered
+      return res.status(201).json({ success: true, message: "Employee registered successfully" });
 
-        const newAccount = new accountModel({ username: username, password, role: "employee", userId: newEmployee._id });
-
-        await newAccount.save();
-
-        return res.status(201).json({ message: "Account registered successfully" });
-
-    }
-
-    catch (err) {
-        res.status(500).json({
-            status: "error",
-            code: 500,
-            data: [],
-            message: err.message,
-        });
-    }
-    res.end();
-
-}
+  } catch (err) {
+      res.status(500).json({
+          status: "error",
+          code: 500,
+          data: [],
+          message: err.message,
+      });
+  }
+  res.end();
+};
 
 const Login = async (req, res) => {
     const { username } = req.body;
@@ -53,7 +58,7 @@ const Login = async (req, res) => {
         }
 
         let options = {
-            maxAge: 24 * 60 * 60 * 1000, // would expire in 20 minutes
+            maxAge: 24 * 60 * 60 * 1000, 
             httpOnly: true, // The cookie is only accessible by the web server
             sameSite: "Lax", // Change SameSite attribute to Lax
         };
