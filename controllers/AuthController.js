@@ -23,8 +23,7 @@ const Register = async (req, res) => {
 
       // If username and password are provided, create new account
       if (username && password) {
-          const hashedPassword = await bcrypt.hash(password, 10);
-          const newAccount = new accountModel({ username, password: hashedPassword, role: "employee", userId: newEmployee._id });
+          const newAccount = new accountModel({ username, password: password, role: "employee", userId: newEmployee._id });
           await newAccount.save();
           return res.status(201).json({ success: true, message: "Employee and account registered successfully" });
       }
