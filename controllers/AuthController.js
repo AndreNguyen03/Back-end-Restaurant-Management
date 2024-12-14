@@ -91,10 +91,9 @@ const checkAuth = async (req, res) => {
     try {
       if (req.cookies.SessionID) {
         const decoded = jwt.verify(req.cookies.SessionID, process.env.SECRET_ACCESS_TOKEN);
-        console.log('Token decoded:', decoded); // Add logging
+        
   
         const user = await accountModel.findById(decoded.id);
-        console.log('User found:', user); // Add logging
         if (user) {
           return res.json({
             isAuthenticated: true,

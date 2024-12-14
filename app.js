@@ -8,6 +8,7 @@ import authRouter from "./routes/authRoute.js";
 import employeeRouter from "./routes/employeeRoute.js";
 import tableRouter from "./routes/tableRoute.js";
 
+
 // app config
 const app = express();
 
@@ -37,5 +38,8 @@ app.use("/api/employee", employeeRouter); // employee
 app.get("/", (req, res) => {
   res.send("API working");
 });
+
+
+
 
 export default app;
