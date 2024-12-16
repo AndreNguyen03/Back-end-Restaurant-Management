@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routes/authRoute.js";
 import employeeRouter from "./routes/employeeRoute.js";
 import tableRouter from "./routes/tableRoute.js";
+import commentRouter from "./routes/commentRoute.js";
 
 
 // app config
@@ -35,6 +36,7 @@ app.use("/images", express.static("uploads"));
 app.use("/api/cAuth", customerAuthRouter); // customer auth
 app.use("/api/eAuth", authRouter); // employee auth
 app.use("/api/employee", employeeRouter); // employee
+app.use('/api/comment',commentRouter)
 app.get("/", (req, res) => {
   res.send("API working");
 });
