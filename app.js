@@ -6,6 +6,7 @@ import customerAuthRouter from './routes/customerAuthRoute.js';
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/authRoute.js';
 import employeeRouter from './routes/employeeRoute.js';
+import ingredientRouter from './routes/ingredientRoute.js';
 
 // app config
 const app = express()
@@ -22,14 +23,16 @@ app.use(cors(
 ));
 app.use(cookieParser());
 // db connetion
+
 Database.getInstance();
 
 // api endpoints
 app.use('/api/dish', dishRouter); 
 app.use('/images',express.static('uploads'));
 app.use('/api/cAuth', customerAuthRouter); // customer auth
-app.use('/api/eAuth', authRouter) // employee auth
-app.use('/api/employee', employeeRouter) // employee
+app.use('/api/eAuth', authRouter); // employee auth
+app.use('/api/employee', employeeRouter); // employee
+app.use('/api/ingredient', ingredientRouter); // ingredient
 app.get('/', (req,res) => {
     res.send('API working')
 })
