@@ -23,8 +23,8 @@ const Register = async (req, res) => {
 
       // If username and password are provided, create new account
       if (username && password) {
-          const hashedPassword = await bcrypt.hash(password, 10);
-          const newAccount = new accountModel({ username, password: hashedPassword, role: "employee", userId: newEmployee._id });
+          // const hashedPassword = await bcrypt.hash(password, 10);
+          const newAccount = new accountModel({ username, password, role: "employee", userId: newEmployee._id });
           await newAccount.save();
           return res.status(201).json({ success: true, message: "Employee and account registered successfully" });
       }
@@ -47,12 +47,14 @@ const Login = async (req, res) => {
     const { username } = req.body;
     try {
         const user = await accountModel.findOne({ username }).select("+password");
+        console.log(user);
         if (!user) {
             return res.status(400).json({ message: "Invalid username or password" });
         }
         console.log('user found');
 
         const isPasswordValid = await bcrypt.compare(`${req.body.password}`, user.password);
+        console.log(`isPasswordValid`,isPasswordValid, req.body.password, user.password);
         if (!isPasswordValid) {
             return res.status(400).json({ message: "Invalid username or password" });
         }

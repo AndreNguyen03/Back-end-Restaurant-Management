@@ -6,7 +6,8 @@ import customerAuthRouter from './routes/customerAuthRoute.js';
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/authRoute.js';
 import employeeRouter from './routes/employeeRoute.js';
-
+import invoiceRouter from './routes/invoice.route.js';
+import { invoice } from './models/invoice.model.js';
 // app config
 const app = express()
 
@@ -30,6 +31,8 @@ app.use('/images',express.static('uploads'));
 app.use('/api/cAuth', customerAuthRouter); // customer auth
 app.use('/api/eAuth', authRouter) // employee auth
 app.use('/api/employee', employeeRouter) // employee
+app.use('/api/invoices', invoiceRouter);
+
 app.get('/', (req,res) => {
     res.send('API working')
 })
