@@ -13,15 +13,14 @@ const customerSchema = new mongoose.Schema({
         max: 10,
         unique: true,
     },
-    email: {
-        type: String,
-        required: "Your email is required",
-        max: 255,
-        unique: true,
-    },
     cartData: {
         type: Object,
         default: {}
+    },
+    email: {
+        type: String,
+        required: "Your email is required",
+        unique: true,
     },
 })
 
