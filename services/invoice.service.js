@@ -13,7 +13,7 @@ class InvoiceService {
     // Tạo hóa đơn mới
     static async createInvoice(data) {
         const customId = await this.generateCustomId();
-        const { tableId = "none" , cartData, totalAmount } = data;
+        const { tableName = "none" , cartData, totalAmount } = data;
     
         // Map through cartData and calculate item details
         const itemDetails = await Promise.all(
@@ -33,7 +33,7 @@ class InvoiceService {
     
         const newInvoice = new invoice({
           customId,
-          table: tableId,
+          table: tableName,
           total: totalAmount,
           items: itemDetails,
         });
@@ -43,22 +43,23 @@ class InvoiceService {
 
     // Lấy hóa đơn theo ngày
     static async getInvoicesByDate(date) {
-        const startOfDay = new Date(date.setHours(0, 0, 0, 0)); // Đầu ngày
-        const endOfDay = new Date(date.setHours(23, 59, 59, 999)); // Cuối ngày
-
+        console.log(`invoicedate`,date);
+        const startOfDay = new Date(date);
+        startOfDay.setHours(0, 0, 0, 0);
+        console.log(`startday`,startOfDay);
+        
+        const endOfDay = new Date(date);
+        endOfDay.setHours(23, 59, 59, 999);
+        console.log(`endday`,endOfDay);
+      
         const invoices = await invoice.find({
-            dateTime: { $gte: startOfDay, $lte: endOfDay },
-        }).populate('items.dish'); // Populate để lấy thông tin món ăn từ Dish model
+          createdAt: { $gte: startOfDay, $lte: endOfDay },
+        });
+        
+        console.log(invoices)
 
-        return invoices.map((invoice) => ({
-            ...invoice.toObject(),
-            dateTime: new Date(invoice.dateTime).toLocaleString("vi-VN"),
-            items: invoice.items.map(item => ({
-                ...item.toObject(),
-                dish: item.dish ? item.dish.name : 'Unknown dish', // Lấy tên món ăn
-            })),
-        }));
-    }
+        return invoices;
+      }
 }
 
 export default InvoiceService;

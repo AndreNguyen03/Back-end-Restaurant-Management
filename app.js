@@ -8,7 +8,7 @@ import authRouter from "./routes/authRoute.js";
 import employeeRouter from "./routes/employeeRoute.js";
 import tableRouter from "./routes/tableRoute.js";
 import commentRouter from "./routes/commentRoute.js";
-
+import invoiceRouter from './routes/invoice.route.js'
 import ingredientRouter from './routes/ingredientRoute.js';
 
 // app config
@@ -39,7 +39,8 @@ app.use("/api/cAuth", customerAuthRouter); // customer auth
 app.use("/api/eAuth", authRouter);; // employee auth
 app.use("/api/employee", employeeRouter);; // employee
 app.use('/api/ingredient', ingredientRouter); // ingredient
-app.use('/api/comment',commentRouter)
+app.use('/api/comment',commentRouter);
+app.use('/api/invoices', invoiceRouter);
 app.get("/", (req, res) => {
   res.send("API working");
 });
