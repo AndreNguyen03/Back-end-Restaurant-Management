@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const tableSchema = new mongoose.Schema({
+export const tableSchema = new mongoose.Schema({
   name: { type: String, required: true },
   capacity: { type: Number, required: true },
 });
