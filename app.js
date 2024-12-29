@@ -8,8 +8,11 @@ import authRouter from "./routes/authRoute.js";
 import employeeRouter from "./routes/employeeRoute.js";
 import tableRouter from "./routes/tableRoute.js";
 import commentRouter from "./routes/commentRoute.js";
+import invoiceRouter from './routes/invoice.route.js'
 import purchaseRouter from "./routes/purchaseRoute.js";
 import ingredientRouter from './routes/ingredientRoute.js';
+import reservationRouter from './routes/reservation.route.js';
+import errorHandler from "./middlewares/errorHandler.js";
 
 // app config
 const app = express();
@@ -40,12 +43,16 @@ app.use("/api/eAuth", authRouter);; // employee auth
 app.use("/api/employee", employeeRouter); // employee
 app.use('/api/ingredient', ingredientRouter); // ingredient
 app.use('/api/comment',commentRouter);
+app.use('/api/invoices', invoiceRouter);
+app.use('/api/reservations', reservationRouter);
+
+app.use('/api/comment',commentRouter);
 app.use('/api/purchase',purchaseRouter)
 app.get("/", (req, res) => {
   res.send("API working");
 });
 
-
+app.use(errorHandler);
 
 
 export default app;
