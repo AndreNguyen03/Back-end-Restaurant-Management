@@ -207,7 +207,7 @@ Nhà hàng Cà Chua`,
   };
 
   try {
-    sendMail(mailOptions);
+    await sendMail(mailOptions);
     const existingOtp = await Otp.findOne({ email });
     if (existingOtp) {
       existingOtp.otp = otp;

@@ -13,6 +13,7 @@ import purchaseRouter from "./routes/purchaseRoute.js";
 import ingredientRouter from './routes/ingredientRoute.js';
 import reservationRouter from './routes/reservation.route.js';
 import errorHandler from "./middlewares/errorHandler.js";
+import { sendMail } from "./service/mailSender.js";
 
 // app config
 const app = express();
@@ -34,6 +35,8 @@ app.use(cookieParser());
 
 Database.getInstance();
 
+
+
 // api endpoints
 app.use("/api/dish", dishRouter);
 app.use("/api/table", tableRouter);
@@ -45,9 +48,21 @@ app.use('/api/ingredient', ingredientRouter); // ingredient
 app.use('/api/comment',commentRouter);
 app.use('/api/invoices', invoiceRouter);
 app.use('/api/reservations', reservationRouter);
-
 app.use('/api/comment',commentRouter);
 app.use('/api/purchase',purchaseRouter)
+
+app.post("/api/send-mail", async (req, res, ) => {
+  const { to, subject, text } = req.body;
+
+  const mailOptions = {
+    from: 'tomato22520060@gmail.com',
+    to,
+    subject,
+    text,
+  }
+
+  await sendMail(mailOptions);
+})
 app.get("/", (req, res) => {
   res.send("API working");
 });
