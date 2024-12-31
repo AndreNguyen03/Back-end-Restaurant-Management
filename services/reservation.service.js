@@ -17,6 +17,7 @@ class ReservationService {
       const reservationDate = new Date(date);
       const startTime = new Date(`${date}T${time}`);
 
+
       if (isNaN(reservationDate.getTime()) || isNaN(startTime.getTime())) {
         throw new BadRequestError("Invalid date or time format");
       }
@@ -124,6 +125,15 @@ class ReservationService {
         $lte: endOfDay,
       },
     });
+  }
+
+  static async deleteReservation(reservationId) {
+    const reservation = await ReservationModel.findById(reservationId);
+    if (!reservation) {
+      throw new NotFoundError("Reservation not found");
+    }
+
+    return await ReservationModel.findByIdAndDelete(reservationId);
   }
 }
 

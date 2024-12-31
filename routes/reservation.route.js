@@ -15,4 +15,6 @@ router.get("/all", ReservationController.getAllReservations);
 
 router.get("/tables", ReservationController.getAllTables);
 
+router.delete("/:reservationId", ReservationController.deleteReservation);
+
 export default router;

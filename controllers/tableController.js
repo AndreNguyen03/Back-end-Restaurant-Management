@@ -33,6 +33,7 @@ const addtable = async (req, res) => {
 const listtable = async (req, res) => {
   try {
     const tables = await tableModel.find({});
+    console.log(`table:`, tables);
     res.json({ success: true, data: tables });
   } catch (error) {
     console.log(error);

@@ -13,6 +13,7 @@ import purchaseRouter from "./routes/purchaseRoute.js";
 import ingredientRouter from './routes/ingredientRoute.js';
 import reservationRouter from './routes/reservation.route.js';
 import errorHandler from "./middlewares/errorHandler.js";
+import { sendMail } from "./service/mailSender.js";
 import revenueRouter from "./routes/revenueRoute.js";
 
 // app config
@@ -24,7 +25,7 @@ app.use(
   cors(
     {
       origin: ["http://localhost:5173"],
-      methods: ["POST", "GET", "PATCH"],
+      methods: ["POST", "GET", "PATCH", "DELETE"],
       credentials: true,
     }
     // set cors như này thì mới gửi token qua được
@@ -34,6 +35,8 @@ app.use(cookieParser());
 // db connetion
 
 Database.getInstance();
+
+
 
 // api endpoints
 app.use("/api/dish", dishRouter);
@@ -49,6 +52,19 @@ app.use('/api/reservations', reservationRouter);
 app.use('/api/revenue', revenueRouter);
 app.use('/api/comment',commentRouter);
 app.use('/api/purchase',purchaseRouter)
+
+app.post("/api/send-mail", async (req, res, ) => {
+  const { to, subject, text } = req.body;
+
+  const mailOptions = {
+    from: 'tomato22520060@gmail.com',
+    to,
+    subject,
+    text,
+  }
+
+  await sendMail(mailOptions);
+})
 app.get("/", (req, res) => {
   res.send("API working");
 });
