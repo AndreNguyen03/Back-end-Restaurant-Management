@@ -126,6 +126,15 @@ class ReservationService {
       },
     });
   }
+
+  static async deleteReservation(reservationId) {
+    const reservation = await ReservationModel.findById(reservationId);
+    if (!reservation) {
+      throw new NotFoundError("Reservation not found");
+    }
+
+    return await ReservationModel.findByIdAndDelete(reservationId);
+  }
 }
 
 export default ReservationService;

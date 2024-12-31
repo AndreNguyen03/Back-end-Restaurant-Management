@@ -24,7 +24,7 @@ app.use(
   cors(
     {
       origin: ["http://localhost:5173"],
-      methods: ["POST", "GET", "PATCH"],
+      methods: ["POST", "GET", "PATCH", "DELETE"],
       credentials: true,
     }
     // set cors như này thì mới gửi token qua được
