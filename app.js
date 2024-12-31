@@ -13,6 +13,7 @@ import purchaseRouter from "./routes/purchaseRoute.js";
 import ingredientRouter from './routes/ingredientRoute.js';
 import reservationRouter from './routes/reservation.route.js';
 import errorHandler from "./middlewares/errorHandler.js";
+import revenueRouter from "./routes/revenueRoute.js";
 
 // app config
 const app = express();
@@ -45,7 +46,7 @@ app.use('/api/ingredient', ingredientRouter); // ingredient
 app.use('/api/comment',commentRouter);
 app.use('/api/invoices', invoiceRouter);
 app.use('/api/reservations', reservationRouter);
-
+app.use('/api/revenue', revenueRouter);
 app.use('/api/comment',commentRouter);
 app.use('/api/purchase',purchaseRouter)
 app.get("/", (req, res) => {
