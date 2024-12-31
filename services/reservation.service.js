@@ -17,6 +17,7 @@ class ReservationService {
       const reservationDate = new Date(date);
       const startTime = new Date(`${date}T${time}`);
 
+
       if (isNaN(reservationDate.getTime()) || isNaN(startTime.getTime())) {
         throw new BadRequestError("Invalid date or time format");
       }
