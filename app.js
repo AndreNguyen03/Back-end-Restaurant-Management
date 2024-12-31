@@ -23,7 +23,7 @@ app.use(
   cors(
     {
       origin: ["http://localhost:5173"],
-      methods: ["POST", "GET"],
+      methods: ["POST", "GET", "PATCH"],
       credentials: true,
     }
     // set cors như này thì mới gửi token qua được
@@ -53,6 +53,5 @@ app.get("/", (req, res) => {
 });
 
 app.use(errorHandler);
-
 
 export default app;

@@ -11,4 +11,8 @@ router.patch("/cancel", ReservationController.cancelReservation);
 
 router.get("/by-date", ReservationController.getReservationsByDate);
 
+router.get("/all", ReservationController.getAllReservations);
+
+router.get("/tables", ReservationController.getAllTables);
+
 export default router;
