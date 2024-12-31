@@ -102,6 +102,23 @@ class ReservationController {
       next(error);
     }
   }
+
+  static async deleteReservation(req, res, next) {
+    try {
+      const { reservationId } = req.params; // Lấy `reservationId` từ params
+  
+      const deletedReservation = await ReservationService.deleteReservation(
+        reservationId
+      );
+  
+      new OK({
+        message: "Reservation deleted successfully",
+        metadata: deletedReservation,
+      }).send(res);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default ReservationController;
