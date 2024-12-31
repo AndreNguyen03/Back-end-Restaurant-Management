@@ -1,78 +1,112 @@
-import purchaseModel from '../models/purchaseModel.js';
-import ingredientModel from '../models/ingredientModel.js';
+import purchaseModel from "../models/purchaseModel.js";
+import ingredientModel from "../models/ingredientModel.js";
 
-// Tiện ích xử lý lỗi
-const handleError = (res, error, statusCode = 400) => {
-  res.status(statusCode).json({ success: false, message: error.message });
-};
-
-// Tiện ích tính toán tổng tiền và cập nhật kho
-const processPurchaseDetails = async (details) => {
-  let totalAmount = 0;
-
-  const enrichedDetails = await Promise.all(
-    details.map(async (detail) => {
-      const ingredient = await ingredientModel.findById(detail.ingredient);
-      if (!ingredient) {
-        throw new Error(`Không tìm thấy nguyên liệu với ID ${detail.ingredient}`);
-      }
-
-      const totalPrice = ingredient.unitprice * detail.quantity;
-      totalAmount += totalPrice;
-
-      
-      ingredient.quantity += detail.quantity;
-      await ingredient.save();
-
-      return { ingredient: ingredient._id, quantity: detail.quantity, totalPrice };
-    })
-  );
-
-  return { enrichedDetails, totalAmount };
-};
-
-// Thêm một giao dịch mua mới
 const addPurchase = async (req, res) => {
-  const { details } = req.body;
+  console.log("Payload nhận từ frontend:", req.body);
+
+  const { ingredients } = req.body;
 
   try {
-    const { enrichedDetails, totalAmount } = await processPurchaseDetails(details);
+    // Kiểm tra payload hợp lệ
+    if (!ingredients || !Array.isArray(ingredients) || ingredients.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a valid ingredients array",
+      });
+    }
 
-    const purchase = new purchaseModel({
-      details: enrichedDetails,
+    // Kiểm tra và xử lý từng nguyên liệu
+    const purchaseDetails = await Promise.all(
+      ingredients.map(async (item) => {
+        const { ingredientId, quantity, unitPrice, totalPrice, unit, name } = item;
+
+        if (!ingredientId || !quantity || !unitPrice || !totalPrice || !unit) {
+          throw new Error("Each ingredient must have ingredientId, quantity, unitPrice, totalPrice, and unit.");
+        }
+
+        // Kiểm tra trong database nếu cần
+        const ingredient = await ingredientModel.findById(ingredientId);
+        if (!ingredient) {
+          throw new Error(`Ingredient ${ingredientId} not found`);
+        }
+
+        // Cập nhật số lượng nguyên liệu trong kho
+        ingredient.quantity += quantity;
+        await ingredient.save();
+
+        return {
+          ingredientId: ingredient._id,
+          name: name || ingredient.name,
+          quantity,
+          unitPrice,
+          unit,
+          totalPrice,
+        };
+      })
+    );
+
+    // Tính tổng chi phí
+    const totalAmount = purchaseDetails.reduce((sum, item) => sum + item.totalPrice, 0);
+
+    // Tạo đơn hàng
+    const purchase = await purchaseModel.create({
+      ingredient: purchaseDetails,
       totalAmount,
+      // Không cần gửi purchaseDate vì nó sẽ được tạo tự động
     });
 
-    await purchase.save();
-    res.json({ success: true, message: 'Thêm giao dịch thành công', data: purchase });
+    res.status(201).json({
+      success: true,
+      data: purchase,
+    });
   } catch (error) {
-    handleError(res, error);
+    console.error("Lỗi xử lý:", error.message);
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
-// Liệt kê tất cả giao dịch
+
+
+
+
+
+
+// Get all purchases
 const listPurchases = async (req, res) => {
   try {
-    const purchases = await purchaseModel.find().populate('details.ingredient').lean();
-    res.json({ success: true, data: purchases });
-  } catch (error) {
-    handleError(res, error, 500);
+    const purchases = await purchaseModel.find({});
+    res.json({success: true, data: purchases});
+  }
+  catch(error){
+    console.log(error);
+    res.json({success: false, message: 'error fetching purchase list'});
   }
 };
 
-// Liệt kê một giao dịch cụ thể
+// Get single purchase by ID
 const listSpecificPurchase = async (req, res) => {
-  const { id } = req.body;
-
   try {
-    const purchase = await purchaseModel.findById(id).populate('details.ingredient').lean();
-    if (!purchase) {
-      return res.status(404).json({ success: false, message: 'Không tìm thấy giao dịch' });
+    const purchase = await purchaseModel.findById(req.body.id);
+
+    if(!purchase){
+      return res.json({success: false, message: 'purchase not found'});
     }
-    res.json({ success: true, data: purchase });
-  } catch (error) {
-    handleError(res, error, 500);
+    return res.json({success: true, data: purchase});
   }
+  catch(error){
+    console.log(error);
+    res.json({success: false, message: 'error fetching purchase list'});
+  }
+    
 };
 
-export { addPurchase, listPurchases, listSpecificPurchase };
+
+
+export {
+  addPurchase,
+  listPurchases,
+  listSpecificPurchase,
+};
