@@ -88,7 +88,7 @@ const customerLogin = async (req, res) => {
     }
 
     let options = {
-      maxAge: 20 * 60 * 1000, // would expire in 20minutes
+      maxAge: 3600 * 60 * 1000, // would expire in 20minutes
       httpOnly: true, // The cookie is only accessible by the web server
       secure: true,
       sameSite: "None",
@@ -118,6 +118,7 @@ const checkAuth = async (req, res) => {
         process.env.SECRET_ACCESS_TOKEN
       );
       const user = await accountModel.findById(decoded.id);
+      const customer = await customerModel.findById(user.userId);
       if (user) {
         return res.json({
           isAuthenticated: true,
@@ -125,9 +126,10 @@ const checkAuth = async (req, res) => {
           user: {
             id: user._id,
             username: user.username,
-            fullName: user.full_name,
-            email: user.email,
-            phoneNumber: user.phone_number,
+            fullName: customer.full_name,
+            email: customer.email,
+            phoneNumber: customer.phone_number,
+            customerId: customer._id
           },
         });
       }
