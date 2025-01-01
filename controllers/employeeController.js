@@ -1,5 +1,4 @@
 import employeeModel from '../models/employeeModel.js'
-import fs from 'fs'
 import accountModel from '../models/accountModel.js'
 
 

@@ -7,8 +7,7 @@ customerAuthRouter.post('/register',
 );
 
 
-customerAuthRouter.post('/login',customerLogin
-)
+customerAuthRouter.post('/login',customerLogin)
 
 customerAuthRouter.get('/checkAuth', checkAuth)
 

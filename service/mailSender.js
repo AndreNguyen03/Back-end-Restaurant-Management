@@ -18,14 +18,16 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-const sendMail = (mailOptions) => {
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log('Email sent: ' + info.response);
-    }
-  });
+const sendMail = async (mailOptions) => {
+  try {
+    // Gửi email
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent: ' + info.response);
+  } catch (err) {
+    console.error('Error sending email:', err);
+  } finally {
+    transporter.close();
+  }
 };
 
 export { sendMail, generateOTP };
