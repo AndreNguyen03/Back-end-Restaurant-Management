@@ -56,7 +56,7 @@ const handleZaloPayCallback = async (req, res) => {
         amount,
         items,
         status: "confirmed",
-      }); 
+      });
       console.log(newOrder);
 
       await newOrder.save();
@@ -93,7 +93,7 @@ Nhà hàng Cà Chua
 `
       };
 
-      
+
       sendMail(mailOptions);
 
       result.return_code = 1;
@@ -138,7 +138,36 @@ const fetchOrders = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+const updateOrderStatus = async (req, res) => {
+  const { orderId, status } = req.body;
+  try {
+    const order = await orderModel.findById(orderId);
+    order.status = status;
+    await order.save();
 
+    if (status === 'Đang Vận Chuyển') {
+      const customer = await customerModel.findById(order.customerId);
+      const mailOptions = {
+        from: 'tomato22520060@gmail.com',
+        to: customer.email,
+        subject: 'Đơn hàng của bạn đang được vận chuyển',
+        text: `
+Đơn hàng của bạn hiện đang được bắt đầu vận chuyển. Người giao hàng sẽ liên hệ với bạn trong thời gian sớm nhất.
 
+Cảm ơn bạn đã mua sắm tại Nhà hàng Cà Chua. Chúc bạn một ngày an lành.
 
-export { handleZaloPayCallback, fetchOrders };
+Trân trọng,
+Nhà hàng Cà Chua
+`
+      };
+
+      sendMail(mailOptions);
+    }
+
+    res.status(200).json({ success: true, message: "Cập nhật trạng thái đơn hàng thành công" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+export { handleZaloPayCallback, fetchOrders, updateOrderStatus };
