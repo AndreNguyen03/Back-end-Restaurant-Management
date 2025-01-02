@@ -39,7 +39,7 @@ const addPurchase = async (req, res) => {
           name: name || ingredient.name,
           quantity,
           unitPrice,
-          unit,
+          unit: unit ||ingredient.unit,
           totalPrice,
         };
       })
