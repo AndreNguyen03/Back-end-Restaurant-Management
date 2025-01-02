@@ -3,6 +3,7 @@
 import { BadRequestError } from "../core/error.response.js";
 import { CREATED, OK } from "../core/success.response.js";
 import ReservationService from "../services/reservation.service.js";
+import { getIo } from "../socket.js";
 
 class ReservationController {
   static async getReservationsByDate(req, res, next) {
@@ -40,6 +41,11 @@ class ReservationController {
   static async createReservation(req, res, next) {
     try {
       const reservation = await ReservationService.createReservation(req.body);
+
+      const io = getIo();
+
+      io.emit("new_reservation")
+
       new CREATED({
         message: "Reservation created successfully",
         metadata: reservation,
@@ -110,7 +116,9 @@ class ReservationController {
       const deletedReservation = await ReservationService.deleteReservation(
         reservationId
       );
+      
   
+
       new OK({
         message: "Reservation deleted successfully",
         metadata: deletedReservation,

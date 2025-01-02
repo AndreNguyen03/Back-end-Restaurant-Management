@@ -2,9 +2,9 @@ import orderModel from '../models/orderModel.js';
 import customerModel from '../models/customerModel.js';
 import dishModel from '../models/dishModel.js';
 import CryptoJS from 'crypto-js';
-import nodemailer from 'nodemailer';
 import { sendMail } from '../service/mailSender.js';
-
+import { getIo } from '../socket.js';
+import InvoiceService from '../services/invoice.service.js';
 const config = {
   key2: "trMrHtvjo6myautxDUiAcYsVtaeQ8nhf"
 };
@@ -38,9 +38,9 @@ const handleZaloPayCallback = async (req, res) => {
       // Retrieve dish details
       const items = JSON.parse(item);
       const dishDetails = await Promise.all(items.map(async (i) => {
-        const dish = await dishModel.findById(i.dishId);
+        const dish = await dishModel.findById(i._id);
         return {
-          dishId: i.dishId,
+          dishId: i._id,
           name: dish.name,
           quantity: i.quantity,
           price: dish.price
@@ -55,7 +55,7 @@ const handleZaloPayCallback = async (req, res) => {
         ward,
         amount,
         items,
-        status: "confirmed",
+        status: "Đã Xác Nhận",
       });
       console.log(newOrder);
 
@@ -94,8 +94,21 @@ Nhà hàng Cà Chua
       };
 
 
-      sendMail(mailOptions);
 
+      sendMail(mailOptions);
+      const io = getIo();
+
+      io.emit("new_order");
+
+      try{
+        console.log("Tạo hóa đơn mới");
+        const invoice = await InvoiceService.createInvoice({ tableName: 'Order Online', cartData: items, totalAmount: amount });
+        console.log("Tạo hóa đơn mới thành công");
+      }
+      catch(err)
+      {
+        console.log(err);
+      }
       result.return_code = 1;
       result.return_message = "success";
     }
@@ -114,7 +127,7 @@ const fetchOrders = async (req, res) => {
     const enrichedOrders = await Promise.all(orders.map(async (order) => {
       const customer = await customerModel.findById(order.customerId).select('full_name phone_number');
       const items = await Promise.all(order.items.map(async (item) => {
-        const dish = await dishModel.findById(item.dishId);
+        const dish = await dishModel.findById(item._id);
         return {
           dishId: item.dishId,
           name: dish.name,

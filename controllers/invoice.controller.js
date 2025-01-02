@@ -46,10 +46,6 @@ class InvoiceController {
 
       const invoices = await InvoiceService.getInvoicesByDate(new Date(date));
 
-      if (invoices.length === 0) {
-        throw new NotFoundError("Không tìm thấy hóa đơn nào trong ngày.");
-      }
-
       return new OK({
         message: "Lấy danh sách hóa đơn thành công",
         metadata: invoices,
