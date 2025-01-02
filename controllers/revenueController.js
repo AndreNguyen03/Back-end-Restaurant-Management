@@ -110,7 +110,7 @@ export const getRevenue = async (req, res) => {
         ]);
   
         chartData.push({
-          week: `Week ${week}`,
+          week: `Tuần ${week}`,
           revenue: weeklyChartRevenue[0]?.revenue || 0,
         });
       }

@@ -13,7 +13,7 @@ const reservationSchema = new Schema({
     date: { type: Date, required: true },
     startTime: { type: Date, required: true },
     message: { type: String },
-    status: { type: String, enum: ['pending', 'confirm', 'cancel'], default: 'pending' },
+    status: { type: String, enum: ['Đang chờ', 'Xác nhận', 'Hủy'], default: 'Đang chờ' },
     tableAssigned: tableSchema,
     endTime: { type: Date },
 }, {
