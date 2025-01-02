@@ -12,7 +12,7 @@ const config = {
 
 const createOrder = async (items, fullName, amount, customerId, district, city, exactAddress, ward) => {
   const embed_data = {
-    redirecturl: "google.com",
+    redirecturl: "http://localhost:5174",
     customerId,
     district,
     city,
@@ -30,7 +30,7 @@ const createOrder = async (items, fullName, amount, customerId, district, city, 
     amount,
     description: `Lazada - Payment for the order #${transID}`,
     bank_code: "",
-    callback_url: "https://9f51-183-81-96-10.ngrok-free.app/api/order/add",
+    callback_url: "https://2bad-183-81-96-10.ngrok-free.app/api/order/add",
   };
 
   // appid|apptransid|appuser|amount|apptime|embeddata|item
