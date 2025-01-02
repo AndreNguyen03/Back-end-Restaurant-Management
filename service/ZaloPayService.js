@@ -30,7 +30,7 @@ const createOrder = async (items, fullName, amount, customerId, district, city, 
     amount,
     description: `Lazada - Payment for the order #${transID}`,
     bank_code: "",
-    callback_url: "https://8c21-183-81-96-10.ngrok-free.app/api/order/add",
+    callback_url: "https://9b67-183-81-96-10.ngrok-free.app/api/order/add",
   };
 
   // appid|apptransid|appuser|amount|apptime|embeddata|item
