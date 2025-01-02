@@ -42,7 +42,7 @@ class ReservationService {
     reservationId,
     tableId,
     duration,
-    status = "confirm"
+    status = "Xác nhận"
   ) {
     const reservation = await ReservationModel.findById(reservationId);
     if (!reservation) {
